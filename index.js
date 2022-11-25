@@ -62,18 +62,33 @@ async function run() {
             const query = {email};
             const user = await usersCollection.findOne(query);
             res.send({isSeller: user?.role === 'seller'});
-        })
+        });
+
         app.get('/user/admin/:email', async (req, res) => {
             const email = req.params.email;
             const query = {email};
             const user = await usersCollection.findOne(query);
             res.send({isAdmin: user?.role === 'admin'});
         });
+
+        app.get('/users', async (req, res) => {
+            const role = req.query.email;
+            const query = {role: role};
+            const result = await usersCollection.find(query).toArray();
+            res.send(result);
+        })
  
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             res.send(result);
+        });
+
+        app.delete('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const user = await usersCollection.deleteOne(filter);
+            res.send(user)
         })
 
 
