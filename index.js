@@ -83,7 +83,18 @@ async function run() {
             res.send(result)
         })
 
-       
+        app.put('/available/admin/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const options= {upsert: true};
+            const updatedDoc = {
+                $set: {
+                    available: 'available'
+                }
+            }
+            const result = await productCategoryCollection.updateOne(filter, updatedDoc, options);
+            res.send(result)
+        })
 
         app.delete('/productCategory/:id', async (req, res) => {
             const id = req.params.id;
