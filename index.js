@@ -22,11 +22,19 @@ async function run() {
         const categoryCollection = client.db('maxwheels').collection('category');
         const bookingCollection = client.db('maxwheels').collection('booking');
         const usersCollection = client.db('maxwheels').collection('users');
+        const reportCollection = client.db('maxwheels').collection('reportadmin');
 
         app.get('/productCategory', async (req, res) => {
             const query = {};
             const result = await productCategoryCollection.find(query).toArray();
             res.send(result);
+        });
+
+        app.get('/dashboard/productCategory', async (req, res) => {
+            const email = req.query.email;
+            const query = {email};
+            const result = await productCategoryCollection.find(query).toArray();
+            res.send(result)
         });
 
         app.get('/productCategory/:id', async (req, res) => {
@@ -36,62 +44,26 @@ async function run() {
             res.send(product);
         });
 
-        app.get('/category', async (req, res) => {
+        app.get('/reportadmin', async (req, res) => {
             const query = {};
-            const result = await categoryCollection.find(query).toArray();
-            res.send(result);
-        });
-
-        // booking
-        app.get('/bookings', async (req, res) => {
-            const email = req.query.email;
-            const query = { userEmail: email };
-            const bookings = await bookingCollection.find(query).toArray();
-            res.send(bookings)
+            const result = await reportCollection.find(query).toArray();
+            res.send(result)
         })
 
-        app.post('/booking', async (req, res) => {
-            const user = req.body;
-            const booking = await bookingCollection.insertOne(user);
-            res.send(booking);
+        app.post('/productCategory', async (req, res) => {
+            const products = req.body;
+            const resutl = await productCategoryCollection.insertOne(products);
+            res.send(resutl)
         });
 
-        // Users
-        app.get('/user/seller/:email', async (req, res) => {
-            const email = req.params.email;
-            const query = {email};
-            const user = await usersCollection.findOne(query);
-            res.send({isSeller: user?.role === 'seller'});
-        });
-
-        app.get('/user/admin/:email', async (req, res) => {
-            const email = req.params.email;
-            const query = {email};
-            const user = await usersCollection.findOne(query);
-            res.send({isAdmin: user?.role === 'admin'});
-        });
-
-        app.get('/users', async (req, res) => {
-            const role = req.query.email;
-            const query = {role: role};
-            const result = await usersCollection.find(query).toArray();
-            res.send(result);
-        })
- 
-        app.post('/users', async (req, res) => {
-            const user = req.body;
-            const result = await usersCollection.insertOne(user);
-            res.send(result);
-        });
-
-        app.delete('/users/:id', async (req, res) => {
-            const id = req.params.id;
-            const filter = {_id: ObjectId(id)};
-            const user = await usersCollection.deleteOne(filter);
-            res.send(user)
+        
+        app.post('/reportadmin', async (req, res) => {
+            const report = req.body;
+            const result = await reportCollection.insertOne(report);
+            res.send(result)
         })
 
-
+        
 
     }
     finally {
