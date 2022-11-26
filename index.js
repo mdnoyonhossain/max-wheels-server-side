@@ -35,8 +35,6 @@ function verifyJWT(req, res, next) {
 
 }
 
-
-
 async function run() {
     try {
         const productCategoryCollection = client.db('maxwheels').collection('productCategory');
@@ -131,12 +129,7 @@ async function run() {
         });
 
         // booking
-        app.get('/bookings', async (req, res) => {
-            const email = req.query.email;
-            const query = { userEmail: email };
-            const bookings = await bookingCollection.find(query).toArray();
-            res.send(bookings)
-        })
+        
 
         app.post('/booking', async (req, res) => {
             const user = req.body;
@@ -156,7 +149,7 @@ async function run() {
             }
             res.status(403).send({ accessToken: '' })
         });
-        
+
         app.get('/user/seller/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email };
