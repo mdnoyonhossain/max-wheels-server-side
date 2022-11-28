@@ -183,11 +183,22 @@ async function run() {
             res.send(result);
         })
 
+
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             res.send(result);
         });
+
+        
+
+        app.get('/verified/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await usersCollection.findOne(query);
+            res.send(result);
+        })
+
 
         app.put('/user/verified/:id', async (req, res) => {
             const id = req.params.id;
